@@ -1,39 +1,43 @@
 let express = require('express');
 let router = express.Router();
 const fs = require("fs");
+const firebase = require("firebase");
+const jsonConfig = require("../config.json"); 
+const config = {
+  apiKey: jsonConfig.apiKey,
+  authDomain: jsonConfig.authDomain,
+  databaseURL: jsonConfig.databaseURL,
+  storageBucket: jsonConfig.storageBucket
+};
+firebase.initializeApp(config);
+const database = firebase.database();
 /* GET home page. */
 router.get('/', (req, res, next) => {
   res.render('index');
 });
 router.post("/generateURL", (req, res, next) => {
-  let db = JSON.parse(fs.readFileSync("./db.json").toString(), true);
-  let ID = makeid();
-  if (db.links.find(e => e.ID == ID)) ID = makeid(); //regenerate id if it exists, the odds of the new ID existing are one in `2.687292e+111`
-  const urlObj = {
-    oldURL: req.body.url,
-    ID: ID,
-    ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
+  try {
+    let ID = makeid();
+    database.ref('links/' + ID).set({
+      oldURL: req.body.url,
+      ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress //this doesn't even work what am i doing
+    });
+    let url = req.protocol + '://' + req.get('host') + "/url/" + ID;
+    res.render("success", {
+      url: url
+    });
+  } catch (error) {
+    console.log(error)
   }
-  db.links.push(urlObj);
-  console.log(`${req.protocol + '://' + req.get('host')}/${urlObj.ID}`);
-  fs.writeFileSync("./db.json", JSON.stringify(db));
-  let url = req.protocol + '://' + req.get('host') + "/" + urlObj.ID;
-  res.render("success", {
-    url: url
-  });
+
 });
 router.get("/api/v1/shortener", (req, res, next) => {
-  let db = JSON.parse(fs.readFileSync("./db.json").toString(), true);
   let ID = makeid();
-  if (db.links.find(e => e.ID == ID)) ID = makeid(); //regenerate id if it exists, the odds of the new ID existing are one in `2.687292e+111`
-  const urlObj = {
+  database.ref('links/' + ID).set({
     oldURL: req.query.url,
-    ID: ID,
-    ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress
-  }
-  db.links.push(urlObj);
-  fs.writeFileSync("./db.json", JSON.stringify(db));
-  let url = req.protocol + '://' + req.get('host') + "/" + urlObj.ID;
+    ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress //this doesn't even work what am i doing
+  });
+  let url = req.protocol + '://' + req.get('host') + "/url/" + ID;
   res.json({
     "status": 200,
     "data": {
@@ -41,11 +45,14 @@ router.get("/api/v1/shortener", (req, res, next) => {
     }
   })
 });
-router.get("*", (req, res, next) => {
-  let db = JSON.parse(fs.readFileSync("./db.json").toString(), true);
-  let newRedir = db.links.find(e => e.ID == req.url.replace("/", "")); //hacky but working way
-  if (!newRedir) return res.render("error");
-  res.redirect(newRedir.oldURL);
+router.get("/url/:param", (req, res, next) => {
+  if (req.url === "/api/v1/shortener" || req.url === "generateURL" || req.url === "/") return;
+  database.ref('links/').once("value")
+    .then(e => {
+      console.log(e.val())
+      console.log(req.url);
+      res.redirect(e.val()[req.url.replace("/url/", "")].oldURL);
+    });
 });
 module.exports = router;
 

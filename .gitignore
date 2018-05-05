@@ -62,3 +62,9 @@ typings/
 
 # database
 db.json
+
+# configuration
+config.json
+firebase.json
+database.rules.json
+.firebaserc
