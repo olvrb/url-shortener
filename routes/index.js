@@ -49,8 +49,6 @@ router.get("/url/:param", (req, res, next) => {
   if (req.url === "/api/v1/shortener" || req.url === "generateURL" || req.url === "/") return;
   database.ref('links/').once("value")
     .then(e => {
-      console.log(e.val())
-      console.log(req.url);
       res.redirect(e.val()[req.url.replace("/url/", "")].oldURL);
     });
 });
