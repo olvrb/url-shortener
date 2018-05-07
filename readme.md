@@ -10,12 +10,16 @@ $ cd url-shortener
 ```
 * run `npm install` or `yarn`, depending on which one you prefer
 * install pm2 using like this: `npm i -g pm2`
-* create a db.json file in the root of the directory with the following content: 
+* create a `config.json` in the root with the following contents:
 ```json
 {
-    "links" : []
+    "apiKey": "",
+    "authDomain": "",
+    "databaseURL": "",
+    "storageBucket": ""
 }
 ```
+* go to [this website](https://console.firebase.google.com), create a new project, and fill in the details in the `config.json` 
 * run `pm2 start ./bin/www`
 * go [here](http://localhost:3000) and start using it!
 

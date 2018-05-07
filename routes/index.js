@@ -27,7 +27,7 @@ router.post("/generateURL", (req, res, next) => {
       url: url
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 
 });
@@ -56,17 +56,16 @@ module.exports = router;
 
 /**
  * 
- * @param {Number} length 
- * @default {5}
+ * @param {Number} length length of the ID
+ * @default 5
+ * @description Create a random ID
  * @returns {String} random id
  */
 function makeid(length = 5) {
   let text = "";
   let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
   for (let i = 0; i < length; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   }
-
   return text;
 }
