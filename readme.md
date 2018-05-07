@@ -1,6 +1,12 @@
 # url-shortener
 ---
-# How to use
+
+# I just want a simple URL Shortener!
+
+https://short.reoo.me
+
+
+# Selfhost
 
 * make sure you have [node.js](https://nodejs.org/en/) 8.11 or above
 * clone this repository like this: 
@@ -25,7 +31,7 @@ $ cd url-shortener
 
 # API
 
-This api was mainly made for use with [sharex](https://getsharex.com), [here](https://i.reoo.me/3zJen3P.sxcu) is an example i made 
+This api was mainly made for use with [sharex](https://getsharex.com), [here](https://i.reoo.me/YeSy5ja.sxcu) is an example i made 
 
 # License
 GPL-3.0 
