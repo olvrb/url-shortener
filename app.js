@@ -1,13 +1,24 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+let createError = require('http-errors');
+let express = require('express');
+let path = require('path');
+let cookieParser = require('cookie-parser');
+let logger = require('morgan');
+const RateLimit = require('express-rate-limit');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+
+app.enable('trust proxy');
+let apiLimiter = new RateLimit({
+  windowMs: 1*60*1000, // 1 minute
+  max: 5,
+  delayMs: 0 // disabled
+});
+// only apply to requests that begin with /api/
+app.use('/api/', apiLimiter);
+app.use('/generateURL', apiLimiter);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
