@@ -52,6 +52,13 @@ router.get("/url/:param", (req, res, next) => {
       res.redirect(e.val()[req.url.replace("/url/", "")].oldURL);
     });
 });
+router.use(function (err, req, res, next) {
+  if (err) {
+    console.log('Error', err);
+  } else {
+    console.log('404')
+  }
+});
 module.exports = router;
 
 /**
