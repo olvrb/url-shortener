@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Comfortaa');
+
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 14px "Comfortaa", Helvetica, Arial, sans-serif;
+  font-family: 'Comfortaa', cursive;
 }
 
 a {
