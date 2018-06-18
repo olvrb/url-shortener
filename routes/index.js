@@ -20,7 +20,8 @@ router.post("/generateURL", (req, res, next) => {
     let ID = makeid();
     database.ref("links/" + ID).set({
       oldURL: req.body.url,
-      ip: req.headers["x-forwarded-for"] || req.connection.remoteAddress //this doesn't even work what am i doing
+      ip: req.headers["x-forwarded-for"] || req.connection.remoteAddress,
+      timestamp: +new Date()
     });
     let url = req.protocol + "://" + req.get("host") + "/" + ID;
     res.render("success", {
@@ -34,7 +35,8 @@ router.get("/api/v1/shortener", (req, res, next) => {
   let ID = makeid();
   database.ref("links/" + ID).set({
     oldURL: req.query.url,
-    ip: req.headers["x-forwarded-for"] || req.connection.remoteAddress //this doesn't even work what am i doing
+    ip: req.headers["x-forwarded-for"] || req.connection.remoteAddress,
+    timestamp: +new Date()
   });
   let url = req.protocol + "://" + req.get("host") + "/" + ID;
   res.json({
@@ -58,7 +60,7 @@ router.get("/:param", (req, res, next) => {
       res.redirect(e.val()[req.url.replace("/", "")].oldURL);
     });
 });
-router.use(function(err, req, res, next) {
+router.use(function (err, req, res, next) {
   if (err) {
     console.log("Error", err);
   } else {
