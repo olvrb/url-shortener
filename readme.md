@@ -3,7 +3,7 @@
 
 # I just want a simple URL Shortener!
 
-https://short.reoo.me
+https://s.reoo.me
 
 
 # Selfhost
@@ -31,7 +31,10 @@ $ cd url-shortener
 
 # API
 
-This api was mainly made for use with [sharex](https://getsharex.com), [here](https://i.reoo.me/YeSy5ja.sxcu) is an example i made 
-
+POST `/api/v2/generate`
+returns: {
+    url: String,
+    uniq: String
+}
 # License
 GPL-3.0 
